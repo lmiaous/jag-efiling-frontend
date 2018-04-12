@@ -133,7 +133,6 @@ class CaseList extends React.Component {
     }
 
     save() {
-        console.log("TODO: save the form in the shared state!!!!");
         this.closeEditModal();
     }
 }
