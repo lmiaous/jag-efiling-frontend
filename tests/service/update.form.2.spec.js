@@ -1,8 +1,7 @@
 let Service = require('../../src/service/default.service');
-let url = require('url');
 var qs = require('querystring');
 
-describe('Save form 2', function() {
+describe('Update form 2', function() {
 
     let api = 'http://localhost:5001';
     let server;
@@ -12,9 +11,9 @@ describe('Save form 2', function() {
     beforeEach(function(done) {
         service = new Service();
         service.apiUrl = api;
-        server = require('http').createServer((request, response)=> {            
+        server = require('http').createServer((request, response)=> {
             response.setHeader('Access-Control-Allow-Origin', '*');
-            if (request.url == '/api/forms' && request.method == 'POST') {                
+            if (request.url == '/api/forms' && request.method == 'PUT') {
                 let body = '';
                 request.on('data', (data)=> {
                     body += data;
@@ -25,18 +24,18 @@ describe('Save form 2', function() {
                     var data = qs.parse(body).data;
                     response.write(data);
                     response.end();
-                }); 
+                });
             }
-        }).listen(port, done);            
+        }).listen(port, done);
     });
     afterEach(function() {
         server.close();
     });
 
-    test('sends data via post inside a data field', function(done) {                        
-        service.createForm2({ any:'field' }, function(data) {
+    test('sends data via put inside a data field', function(done) {
+        service.updateForm2({ any:'field' }, function(data) {
             expect(data).toEqual('{"any":"field"}');
             done();
-        });     
+        });
     });
 });

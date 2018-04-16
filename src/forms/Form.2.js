@@ -13,6 +13,7 @@ class Form2 extends Component {
         super(props);
         this.service = props.service ? props.service : new DefaultService();
         this.state = {
+            id: null,
             appellant: {
                 name: '',
                 address: ''
@@ -56,7 +57,7 @@ class Form2 extends Component {
     }
 
     save() {
-        this.service.saveForm2({
+        this.service.createForm2({
                 formSevenNumber: this.findComponent.textInput.value,
                 appellant: {
                     name: this.state.appellant.name,
@@ -71,6 +72,35 @@ class Form2 extends Component {
                     serviceFiler: this.state.respondent.serviceFiler
                 }
             }, (data) => {
+            if (data !== undefined) {
+                this.setState({
+                    displaySaveSuccess: true
+                });
+            } else {
+                this.setState({
+                    displaySaveError: true
+                });
+            }
+        });
+    }
+
+    update() {
+        this.service.updateForm2({
+            id: this.state.id,
+            formSevenNumber: this.findComponent.textInput.value,
+            appellant: {
+                name: this.state.appellant.name,
+                address: this.state.appellant.address
+            },
+            respondent: {
+                name: this.state.respondent.name,
+                address: this.state.respondent.address,
+                phone: this.state.respondent.phone,
+                useServiceEmail: this.state.useServiceEmail,
+                email: this.state.respondent.email,
+                serviceFiler: this.state.respondent.serviceFiler
+            }
+        }, (data) => {
             if (data !== undefined) {
                 this.setState({
                     displaySaveSuccess: true
@@ -100,24 +130,22 @@ class Form2 extends Component {
         this.setState(state);
     }
 
-    respondentPhoneChanged(e) {
-        let state = update(this.state,{ respondent: { phone: { $set: e.target.value } } });
-        this.setState(state);
-    }
+    /**
+     * Generic method for when a field changes.  Assumes state is two levels, and the field.name reflects the state value to update.
+     * For example the field named "respondent.name" would update state.respondent.name.
+     *
+     * This may need to change for example if address became an object instead of a single field.
+     *
+     * @param e  The event that was triggered by the change in the UI field.
+     */
+    fieldChanged(e) {
+        let keys = e.target.name.split(".");
+        let key1 = {};
+        let key2 = {};
 
-    respondentAddressChanged(e) {
-        let state = update(this.state,{respondent: {address: { $set: e.target.value } } });
-        this.setState(state);
-    }
-
-    respondentEmailChanged(e) {
-        let state = update(this.state,{respondent: {email: { $set: e.target.value } } });
-        this.setState(state);
-    }
-
-    serviceFilerChanged(e) {
-        let state = update(this.state,{respondent: {serviceFiler: { $set: e.target.value } } });
-        this.setState(state);
+        key2[(`${keys[1]}`).toString()] = e.target.value;
+        key1[((`${keys[0]}`).toString())] = key2;
+        this.setState(key1);
     }
 
     render() {
@@ -205,7 +233,8 @@ class Form2 extends Component {
                               mandatory={true}
                               labelText="Respondent's mailing address for service "
                               iconText="Where would you like to receive documents related to this case?"
-                              onChange={this.respondentAddressChanged.bind(this)}
+                              onChange={this.fieldChanged.bind(this)}
+                              name="respondent.address"
                           />
                           <FormRow
                             labelText="Do you wish to use email for service?"
@@ -216,18 +245,21 @@ class Form2 extends Component {
                             show={this.state.respondent.useServiceEmail}
                             labelText="Respondent's email "
                             id="respondent-email"
-                            onChange={this.respondentEmailChanged.bind(this)}
+                            name="respondent.email"
+                            onChange={this.fieldChanged.bind(this)}
                           />
                           <FormRow
                             mandatory={true}
                             labelText="Respondent's phone "
-                            onChange={this.respondentPhoneChanged.bind(this)}
+                            onChange={this.fieldChanged.bind(this)}
+                            name="respondent.phone"
                           />
                           <FormRow
                             mandatory={true}
                             labelText="Respondent name (or Solicitor name) "
                             iconText="Who is filing this Notice of Appearance?"
-                            onChange={this.serviceFilerChanged.bind(this)}
+                            name="respondent.serviceFiler"
+                            onChange={this.fieldChanged.bind(this)}
                           />
                         </tbody></table>
                     </div>

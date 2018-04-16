@@ -39,6 +39,18 @@ describe('Search Form 7 in form 2', function() {
         expect(sut.state.respondent.name).toEqual('');
     });
 
+});
+
+describe('Modify Form 2', function() {
+    let document;
+    let sut;
+
+    beforeEach(function() {
+        document = jsdom.jsdom('<div id="root"></div>');
+        sut = ReactDOM.render(<Form2 />, document.getElementById('root'));
+        sut.findComponent.service.setServeLocalData(true);
+    });
+
     test('disables correspondence-email field if checkbox is not selected', function() {
         click('#find-button', document);
 
@@ -53,5 +65,4 @@ describe('Search Form 7 in form 2', function() {
         expect(document.getElementById('receive-email-checkbox').checked).toEqual(true);
         expect(document.getElementById('respondent-email').innerHTML).toEqual('');
     });
-
 });

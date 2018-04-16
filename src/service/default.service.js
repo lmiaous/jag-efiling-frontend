@@ -43,9 +43,16 @@ Service.prototype.searchForm7 = function(file, callback) {
     }
 };
 
-Service.prototype.saveForm2 = function(form, callback) {
+Service.prototype.createForm2 = function(form, callback) {
     let request = require('request');
     request.post(this.base() + '/api/forms', {form: { data:JSON.stringify(form) }}, function(err, response, body) {
+        callback(body);
+    });
+};
+
+Service.prototype.updateForm2 = function(form, callback) {
+    let request = require('request');
+    request.put(this.base() + '/api/forms', {form: { data:JSON.stringify(form) }}, function(err, response, body) {
         callback(body);
     });
 };
