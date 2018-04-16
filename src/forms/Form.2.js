@@ -151,7 +151,6 @@ class Form2 extends Component {
     render() {
         return (
           <div id="topicTemplate" className="template container gov-container form">
-
             <div id="breadcrumbContainer">
                 <ol className="breadcrumb">
 
@@ -164,9 +163,7 @@ class Form2 extends Component {
                 </ol>
             </div>
             <div className="row">
-
                 <div id="main-content" role="main" className="contentPageMainColumn col-sm-12">
-
                     <div id="steps">
                         <ol>
                             <li><span className="step-circle in-progress">1</span><span className="step-title in-progress">Form 2</span></li>
