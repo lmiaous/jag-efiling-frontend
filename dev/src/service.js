@@ -12,7 +12,7 @@ let Service = function(window) {
             if (this.user.indexOf(';') > 0) {
                 this.user = this.user.substring(0, this.user.indexOf(';'));
             }
-            if (this.user.length == 0 || this.user == ';') {
+            if (this.user.length === 0 || this.user === ';') {
                 this.user = undefined;
             }
         }
