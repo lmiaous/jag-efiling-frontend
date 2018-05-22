@@ -1,26 +1,19 @@
-let fakeData = { 
-    parties: {
-        appellant: {
-            name: 'Bruce Wayne',
-            address: 'The Wayne Castle'
-        },
-        respondent: {
-            name: 'Clark Kent',
-            address: 'This guy does not need any'
-        }
-    }
-};
+let USER_COOKIE = 'login';
 
 let Service = function(window) {  
+    this.userCookie = 'login';
     this.apiUrl = undefined;
     this.user = undefined;
     if (typeof window !== 'undefined') {
         this.apiUrl = window.location.origin;        
         if (window.document && window.document.cookie) { 
-            let index = window.document.cookie.indexOf('login=');
-            this.user = window.document.cookie.substring(index + 'login='.length);
+            let index = window.document.cookie.indexOf(USER_COOKIE+'=');
+            this.user = window.document.cookie.substring(index + (USER_COOKIE+'=').length);
             if (this.user.indexOf(';') > 0) {
                 this.user = this.user.substring(0, this.user.indexOf(';'));
+            }
+            if (this.user.length == 0 || this.user == ';') {
+                this.user = undefined;
             }
         }
     }
@@ -87,4 +80,4 @@ Service.prototype.getPersonInfo = function(callback) {
     }); 
 };
 module.exports = Service;
-module.exports.fakeData = fakeData;
+module.exports.USER_COOKIE = USER_COOKIE;

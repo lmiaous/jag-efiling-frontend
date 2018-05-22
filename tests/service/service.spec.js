@@ -55,21 +55,33 @@ describe('Gateway to API', function() {
         });
 
         test('is taken from the cookie', ()=> {
-            service = new Service({ location: { origin:'here' }, document: { cookie:'login=bob' } });
+            service = new Service({ location: { origin:'here' }, document: { cookie:Service.USER_COOKIE+'=bob' } });
 
             expect(service.user).toEqual('bob'); 
         });
 
         test('can be extracted when at the end', ()=> {
-            service = new Service({ location: { origin:'here' }, document: { cookie:'before=it; login=max' } });
+            service = new Service({ location: { origin:'here' }, document: { cookie:'before=it; '+Service.USER_COOKIE+'=max' } });
 
             expect(service.user).toEqual('max'); 
         });
 
         test('can be extracted when in the middle', ()=> {
-            service = new Service({ location: { origin:'here' }, document: { cookie:'before=it; login=max; after=it;' } });
+            service = new Service({ location: { origin:'here' }, document: { cookie:'before=it; '+Service.USER_COOKIE+'=max; after=it;' } });
 
             expect(service.user).toEqual('max'); 
+        });
+
+        test('resists void', ()=> {
+            service = new Service({ location: { origin:'here' }, document: { cookie:Service.USER_COOKIE+'=' } });
+
+            expect(service.user).toEqual(undefined); 
+        });
+
+        test('resists empty', ()=> {
+            service = new Service({ location: { origin:'here' }, document: { cookie:Service.USER_COOKIE+'=;' } });
+
+            expect(service.user).toEqual(undefined); 
         });
     });
 });

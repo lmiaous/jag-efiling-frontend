@@ -9,9 +9,9 @@ describe('Save person', function() {
     let apiServer;
 
     beforeEach(function(done) {
-        service = new Service();
-        apiServer = new LocalServer((request, response)=> {  
-            if (request.url == '/api/persons' && request.method == 'POST') {                
+        service = new Service({ location: { origin:'here' }, document: { cookie:Service.USER_COOKIE+'=max' } });
+        apiServer = new LocalServer((request, response)=> {              
+            if (request.url == '/api/persons' && request.method == 'POST' && request.headers['x-user'] == 'max') {                
                 let body = '';
                 request.on('data', (data)=> {
                     body += data;
