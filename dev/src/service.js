@@ -1,16 +1,3 @@
-let fakeData = { 
-    parties: {
-        appellant: {
-            name: 'Bruce Wayne',
-            address: 'The Wayne Castle'
-        },
-        respondent: {
-            name: 'Clark Kent',
-            address: 'This guy does not need any'
-        }
-    }
-};
-
 let Service = function(window) {  
     this.apiUrl = undefined;
     this.user = undefined;
@@ -33,38 +20,13 @@ Service.prototype.base = function() {
     return this.apiUrl === undefined ? '' : this.apiUrl;
 };
 
-Service.prototype.searchForm7 = function(file, callback) {
-    let get = require('request');
-    get(this.buildOptions('/api/forms?file=' + file), (err, response, body)=>{            
-        if (response.statusCode === 404) { callback(undefined); }
-        else { callback(JSON.parse(body)); }
-    }); 
-};
-
-Service.prototype.createForm2 = function(form, callback) {
+Service.prototype.savePerson = function(user, callback) {
     let request = require('request');
-    let options = this.buildOptions('/api/forms');
-    options.form = { data:JSON.stringify(form) };
+    let options = this.buildOptions('/api/persons');
+    options.form = { data:user };
     request.post(options, function(err, response, body) {
         callback(body);
     });
-};
-
-Service.prototype.updateForm2 = function(form, id, callback) {
-    let request = require('request');
-    let options = this.buildOptions(`/api/forms/${id}`);
-    options.form = { data:JSON.stringify(form) };
-    request.put(options, function(err, response, body) {
-        callback(body);
-    });
-};
-
-
-Service.prototype.getMyCases = function(form, callback) { 
-    let get = require('request');
-    get(this.buildOptions('/api/cases'), (err, response, body)=>{
-        callback(JSON.parse(body));
-    }); 
 };
 
 Service.prototype.buildOptions = function(url) {
@@ -78,6 +40,7 @@ Service.prototype.buildOptions = function(url) {
 Service.prototype.getPersonInfo = function(callback) {
     let get = require('request');
     get(this.buildOptions('/api/persons/' + this.user), (err, response, body)=>{
+        console.log(body);
         if (response && response.statusCode === 200) {
             callback(JSON.parse(body));
         }
@@ -87,4 +50,3 @@ Service.prototype.getPersonInfo = function(callback) {
     }); 
 };
 module.exports = Service;
-module.exports.fakeData = fakeData;

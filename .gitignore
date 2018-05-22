@@ -5,6 +5,7 @@
 
 # dependencies
 /node_modules
+/dev/node_modules
 
 # testing
 /coverage

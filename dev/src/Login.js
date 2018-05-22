@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
-import App from './App';
-import Service from '../src/service/default.service';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Service from './service';
 
 const Login = () => (
   <Router>
@@ -29,8 +28,8 @@ class Authenticate extends Component {
             service.savePerson(login, (data)=> {
                 if (data !== undefined) {
                     this.setState({
-                                      authenticated: true
-                                  })
+                        authenticated: true
+                    });
                 }
             });
         }
@@ -46,13 +45,8 @@ class Authenticate extends Component {
 
         if (document.cookie.indexOf('login=') !== -1 && document.cookie.substring('login='.length).length > 0) {
             let window = this.element.ownerDocument.defaultView;
-            let service = new Service(window);
-            
-            let index = document.cookie.indexOf('login=');
-            let login = document.cookie.substring(index + 'login='.length);
-            if (login.indexOf(';') > 0) {
-                login = login.substring(0, login.indexOf(';'));
-            }
+            let service = new Service(window);            
+            let login = service.user;
             service.getPersonInfo((data)=> {
                 if (data && data.login === login) {
                     this.setState({
@@ -86,7 +80,9 @@ class Authenticate extends Component {
             )
         }
         else {
-            return (<App/>)
+            return (
+                <Route path='*' component={() => window.location = 'http://localhost:3000' }/>
+            )
         }
     }
 }
